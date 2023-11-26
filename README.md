@@ -53,8 +53,7 @@ the most suitable approach.
 
 This project aims to leverage machine learning techniques to classify ECG signals using the ECG-ID Database. By 
 following the outlined methodology and conducting thorough experiments, we anticipate achieving a robust and accurate 
-classification model. This work has the potential to contribute to the field of cardiac health monitoring and pave the 
-way for further advancements in ECG analysis.
+classification model.
 
 ## Citations
 
