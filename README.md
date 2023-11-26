@@ -58,9 +58,9 @@ way for further advancements in ECG analysis.
 
 ## Citations
 
-[1][1] Darmawahyuni, Annisa, et al. "Deep learning-based electrocardiogram rhythm and beat features for heart abnormality 
+* [1][1] Darmawahyuni, Annisa, et al. "Deep learning-based electrocardiogram rhythm and beat features for heart abnormality 
 classification." PeerJ Computer Science 8 (2022): e825.
-[2][2] Ramkumar, M., et al. "Ensemble classifier fostered detection of arrhythmia using ECG data." Medical & Biological 
+* [2][2] Ramkumar, M., et al. "Ensemble classifier fostered detection of arrhythmia using ECG data." Medical & Biological 
 Engineering & Computing (2023): 1-14.
 
 ## Structure
