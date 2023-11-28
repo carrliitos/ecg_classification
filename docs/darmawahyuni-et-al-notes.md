@@ -119,3 +119,39 @@ in this study for the classification of abnormal–normal rhythm and beats. The 
 functions, encompassing 13 convolution layers with varying filter sizes (64, 128, 256, and 512), along with five max 
 pooling layers, and included two fully connected layers with 1,000 nodes each and one node for the output layer. Notably, 
 the 1D-CNN required a three-dimensional input structure comprising n samples, n features, and timesteps.
+
+#### Model Evaluation
+
+The evaluation of ECG signal classification based on rhythm and beat features employs an intra and inter-patient scheme, 
+designed to simulate a clinical environment and ensure the robustness of the proposed model. Five common metrics—accuracy, 
+sensitivity, specificity, precision, and F1-score—are utilized, and additional measures, namely receiver-operating 
+characteristic (ROC) and Precision-Recall (P-R) curves, are included to address imbalanced data concerns, as the beat type 
+classes in the dataset are significantly imbalanced, impacting the overall accuracy.
+
+## Results and Discussions
+
+### ECG rhythm classification in validation model
+
+- A total of 2,445 records, comprising rhythm episodes, were segmented into 138,415 training sets, 15,373 validation 
+sets, and 14,684 unseen sets, resulting in a total of 168,472 episodes for ECG rhythm classification. The PTB Diagnostics 
+ECG records were exclusively used for training and validation, while other datasets were utilized for all sets; notable 
+class imbalances were observed, with no implementation of oversampling techniques to address this issue in the study.
+- The proposed 1D-CNN model was validated using a 10-fold cross-validation scheme, achieving performance results with 
+accuracy and specificity exceeding 99% and sensitivity, precision, and F1 score ranging from 93% to 99%. The model 
+attaining the highest accuracy (99.98%) across all folds, particularly in fold 6, was identified as the most accurate 
+predictor, highlighting the effectiveness of the 1D-CNN in ECG rhythm classification.
+- The Confusion Matrix (CM) depicted in Fig. 6 reveals that the proposed approach achieves a satisfactory evaluation 
+performance in rhythm classification. Despite four prediction errors for the BBB class and two misclassifications between 
+healthy-control and bundle branch block (BBB) rhythms, the overall result is close to 100%, indicating effective 
+classification of ECG signal patterns with rhythm features.
+- Using the performance values from the Confusion Matrix (CM), the classification results are further analyzed through 
+the receiver-operating characteristic (ROC) and precision-recall (PR) curves, visually representing the trade-off in 
+performance across different classification thresholds. The ROC curve in Fig. 7A compares the nine-class ECG rhythm 
+characteristics based on sensitivity and specificity, crucial for precise and accurate medical diagnoses, considering the 
+potential serious consequences of misclassifications between positive and negative ECG rhythm classes.
+- The ROC curves for a nine-class ECG rhythm classification demonstrate excellent performance, with an AUC close to 100%, 
+indicating the model's ability to categorize all classes with higher accuracy and precision. Due to concerns with imbalanced 
+data, the precision-recall (P-R) curve is employed and shows good overall performance. In an intra-patient scheme, the 
+1D-CNN model is proven to be robust, achieving 100% accuracy, sensitivity, specificity, precision, and F1 score for several 
+ECG rhythm classes, with an overall average above 99%.
+
