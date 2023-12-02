@@ -43,11 +43,49 @@ the most suitable approach.
 
 ## Project Timeline
 
-* Week 1: Data Exploration and Preprocessing
-* Week 2: Feature Extraction and Feature Selection
-* Week 3: Model Evaluation, Model Selection, Model Training, and Model Validation
-* Week 4: Hyperparameter Tuning, Optimization, Cross-Validation, and Fine-tuning
-* Week 5: Report Writing and Final Presentation
+1. Saturday: Understand the dataset
+	* Download and thoroughly understand the ECG-ID Database.
+	* Examine the data structure, features, and labels.
+	* Identify any missing or noisy data.
+2. Sunday: Research
+	* Read relevant literature on ECG signal classification
+	* Identify potential algorithms and techniques suitable for the project.
+3. Monday: Data Processing:
+	* Handle missing data, if any.
+	* Normalize and standardize features.
+	* Explore techniques for handling imbalanced classes.
+4. Tuesday: Feature Extraction
+	* Extract relevant features from ECG signals.
+	* Consider time-domain and frequency-domain features.
+5. Wednesday: Model Selection
+	* Choose a suitable classification algorithm.
+	* Divide the dataset into training and testing sets.
+6. Thursday: Model Training
+	* Train your chosen model using the training set.
+	* Experiment with hyperparameter tuning to improve performance.
+7. Friday: Evaluation and Fine-Tuning:
+	* Evaluate the model on the testing set.
+	* Fine-tune the model based on performance.
+	* Consider using techniques like cross-validation.
+8. Saturday: Prepare Presentation
+	* Create slides summarizing the project:
+		* Introduction
+		* Prior works
+		* Dataset overview
+		* Methodology
+		* Results
+		* Challenges faced
+		* Future work
+		* Conclusion
+9. Sunday: 
+	* Finalize Model:
+		* Make final adjustments to the model based on any insights.
+		* Record presentation, ensuring clarity and conciseness.
+	* Prepare Submission:
+		* Finalize the project report.
+		* Ensure all files are organized and ready for submission.
+	* Submit:
+		* Submit project before the 6pm deadline.
 
 ## Conclusion
 
