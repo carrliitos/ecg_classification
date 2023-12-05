@@ -43,11 +43,11 @@ the most suitable approach.
 
 ## Project Timeline
 
-1. Saturday: Understand the dataset
+1. Saturday: Understand the dataset -- **DONE**
 	* Download and thoroughly understand the ECG-ID Database.
 	* Examine the data structure, features, and labels.
 	* Identify any missing or noisy data.
-2. Sunday: Research
+2. Sunday: Research -- **DONE**
 	* Read relevant literature on ECG signal classification
 	* Identify potential algorithms and techniques suitable for the project.
 3. Monday: Data Processing:
