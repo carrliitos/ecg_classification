@@ -50,7 +50,7 @@ the most suitable approach.
 2. Sunday: Research -- **DONE**
 	* Read relevant literature on ECG signal classification
 	* Identify potential algorithms and techniques suitable for the project.
-3. Monday: Data Processing:
+3. Monday: Data Processing: -- **DONE**
 	* Handle missing data, if any.
 	* Normalize and standardize features.
 	* Explore techniques for handling imbalanced classes.
