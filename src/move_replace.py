@@ -8,7 +8,7 @@ def rename_and_move_files(root_path):
             for csv_file in os.listdir(person_folder_path):
                 if csv_file.endswith(".csv"):
                     old_path = os.path.join(person_folder_path, csv_file)
-                    new_name = f"{person_folder}_{csv_file}"
+                    new_name = f"{csv_file}"
                     new_path = os.path.join(root_path, new_name)
                     
                     os.rename(old_path, new_path)
