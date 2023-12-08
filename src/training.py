@@ -3,6 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import joblib  # Used for model serialization
 
 def load_data(file_path):
     """
@@ -61,67 +63,45 @@ def train_model_sklearn(x_train, y_train):
 
     return mlp_classifier
 
-def evaluate_model(estimator, x_validate, y_validate):
+def evaluate_model(mlp_classifier, x_validate, y_validate):
     """
     Evaluate the trained model.
 
     Parameters:
-    - estimator (tf.estimator.Estimator): Trained DNNClassifier model.
+    - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
     - x_validate (numpy.ndarray): Validation features.
     - y_validate (numpy.ndarray): Validation labels.
     """
-    input_fn_validate = tf.estimator.inputs.numpy_input_fn(
-        x={'beat': x_validate},
-        y=y_validate,
-        num_epochs=1,
-        shuffle=False
-    )
+    y_pred = mlp_classifier.predict(x_validate)
+    accuracy = accuracy_score(y_validate, y_pred)
+    print('\nTest Accuracy: {:.2%}\n'.format(accuracy * 100))
 
-    accuracy_score = estimator.evaluate(input_fn=input_fn_validate)
-    print('\nTest Accuracy: {0:f}%\n'.format(accuracy_score['accuracy'] * 100))
-
-def test_model(estimator, x_test, y_test):
+def test_model(mlp_classifier, x_test, y_test):
     """
     Test the trained model.
 
     Parameters:
-    - estimator (tf.estimator.Estimator): Trained DNNClassifier model.
+    - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
     - x_test (numpy.ndarray): Test features.
     - y_test (numpy.ndarray): Test labels.
     """
-    input_fn_test = tf.estimator.inputs.numpy_input_fn(
-        x={'beat': x_test},
-        y=y_test,
-        num_epochs=1,
-        shuffle=False
-    )
+    y_pred = mlp_classifier.predict(x_test)
 
-    predictions = estimator.predict(input_fn=input_fn_test)
+    totvals = len(y_test)
+    totwrong = np.sum(y_test != y_pred)
 
-    totvals = 0
-    totwrong = 0
+    print('Accuracy: {:.2%}'.format((totvals - totwrong) / totvals))
+    print('Wrong: {} out of {}'.format(totwrong, totvals))
 
-    for prediction, expected in zip(predictions, y_test):
-        totvals = totvals + 1
-        catpred = prediction['class_ids'][0]
-        certainty = prediction['probabilities'][catpred] * 100
-        if expected != catpred:
-            totwrong = totwrong + 1
-            print('Real: ', expected, ', pred: ', catpred, ', cert: ', certainty)
-
-    print('Accuracy: ', ((totvals - totwrong) * 100.0 / totvals))
-    print('Wrong: ', totwrong, ' out of ', totvals)
-
-def export_model(estimator):
+def export_model(mlp_classifier, save_path='../data/external/mitdb/ecg_serving_model.joblib'):
     """
     Export the trained model for serving predictions.
 
     Parameters:
-    - estimator (tf.estimator.Estimator): Trained DNNClassifier model.
+    - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
+    - save_path (str): Path to save the exported model.
     """
-    feature_placeholders = {'beat': tf.placeholder(dtype=tf.float32, shape=(187,))}
-    serving_input_receiver_fn = tf.estimator.export.build_raw_serving_input_receiver_fn(feature_placeholders)
-    export_dir = estimator.export_savedmodel('ecg_serving', serving_input_receiver_fn, strip_default_attrs=True)
+    joblib.dump(mlp_classifier, save_path)
 
 if __name__ == "__main__":
     # Load the data
@@ -133,13 +113,13 @@ if __name__ == "__main__":
     visualize_data(x_train, y_train)
 
     # Train the model
-    trained_estimator = train_model_sklearn(x_train, y_train)
+    trained_mlp_model = train_model_sklearn(x_train, y_train)
 
     # Evaluate the model
-    evaluate_model(trained_estimator, x_validate, y_validate)
+    evaluate_model(trained_mlp_model, x_validate, y_validate)
 
     # Test the model
-    test_model(trained_estimator, x_test, y_test)
+    test_model(trained_mlp_model, x_test, y_test)
 
     # Export the model
-    export_model(trained_estimator)
+    export_model(trained_mlp_model)
