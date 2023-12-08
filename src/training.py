@@ -93,7 +93,7 @@ def test_model(mlp_classifier, x_test, y_test):
     print('Accuracy: {:.2%}'.format((totvals - totwrong) / totvals))
     print('Wrong: {} out of {}'.format(totwrong, totvals))
 
-def export_model(mlp_classifier, save_path='../data/external/mitdb/ecg_serving_model.joblib'):
+def export_model(mlp_classifier, save_path='../models/mitdb/ecg_serving_model.joblib'):
     """
     Export the trained model for serving predictions.
 
