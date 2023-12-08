@@ -15,19 +15,12 @@ def process_ecg_data(file_path):
     smoothed_heartbeats = scipy.signal.savgol_filter(ecg_data, window_length=20, polyorder=2)
 
     # Find the R waves' peaks
-    r_waves, metadata = scipy.signal.find_peaks(ecg_data, height=0.275)
-
-    p_waves = []
-    q_waves = []
-    s_waves = []
-    t_waves = []
+    r_waves, _ = scipy.signal.find_peaks(ecg_data, height=0.275)
 
     waves_list = []
 
-    index_range = len(smoothed_heartbeats) - 1 # helps us not overshoot last element's index
-    r_waves_indexed = enumerate(r_waves)       # adds a separate index number to each R wave
-
-    waves_df = pd.DataFrame(columns=['time', 'p', 'q', 'r', 's', 't'])
+    index_range = len(smoothed_heartbeats) - 1
+    r_waves_indexed = enumerate(r_waves)
 
     # Total time duration (in seconds)
     total_duration = 20
@@ -44,11 +37,11 @@ def process_ecg_data(file_path):
     # Loop through the RR intervals
     for (index, r) in r_waves_indexed:
         # Get the RR interval
-        start_index = r                    # the index of the current R wave
+        start_index = r  # the index of the current R wave
         try:
-            end_index = r_waves[index + 1] # the index of the next R wave
+            end_index = r_waves[index + 1]  # the index of the next R wave
         except IndexError:
-            end_index = index_range        # have hit the end of the heartbeat array
+            end_index = index_range  # have hit the end of the heartbeat array
         temp_rr_interval = smoothed_heartbeats[start_index:end_index]
 
         p_and_t_waves, metadata = scipy.signal.find_peaks(temp_rr_interval,
@@ -56,49 +49,50 @@ def process_ecg_data(file_path):
                                                           distance=200)
 
         if not p_and_t_waves.any():
-            p_wave = t_wave = None
+            p_wave = q_wave = r_wave = s_wave = t_wave = None
         else:
             p_wave = p_and_t_waves[-1]
             t_wave = p_and_t_waves[0]
 
-            p_wave += r
-            t_wave += r
-        
-        # Label the Q wave
-        q_area = temp_rr_interval[-16:]
-        q_area = pd.Series(q_area)
-        q_wave = q_area.idxmin(axis=0)
-    
-        # Label the S wave
-        s_area = temp_rr_interval[0:16]
-        s_area = pd.Series(s_area)
-        s_wave = s_area.idxmin(axis=0)
-        
-        '''Increment index all of the newly found waves, since each for loop
-        causes the RR interval's index to start at 0. For example, if the 2nd RR
-        interval's Q wave is found at index 12, yet that RR interval actually
-        starts at 100, then the Q wave's actual index is 112.
-        '''
-        q_wave += r + len(temp_rr_interval) - 15
-        s_wave += r
+            # Label the Q wave
+            q_area = temp_rr_interval[-16:]
+            q_area = pd.Series(q_area)
+            q_wave = q_area.idxmin(axis=0)
 
-        # Calculate time for the QRS complex
-        qrs_start_time = time_values[start_index]
+            # Label the S wave
+            s_area = temp_rr_interval[0:16]
+            s_area = pd.Series(s_area)
+            s_wave = s_area.idxmin(axis=0)
 
-        # Add the waves to the DataFrame
-        waves_list.append({
-            'time': qrs_start_time,
-            'p': p_wave,
-            'q': q_wave,
-            'r': r,
-            's': s_wave,
-            't': t_wave
-        })
+            r_wave = len(temp_rr_interval) // 2
 
-    return pd.DataFrame(waves_list)
+            # Increment index all of the newly found waves
+            q_wave += r + len(temp_rr_interval) - 15
+            s_wave += r
+
+            # Add the waves to the list
+            waves_list.extend([
+                {'ECG_I_filtered': smoothed_heartbeats[i], 'wave_label': 'p'} for i in range(max(0, p_wave - 1), min(len(smoothed_heartbeats), p_wave + 2))
+            ])
+            waves_list.extend([
+                {'ECG_I_filtered': smoothed_heartbeats[i], 'wave_label': 'q'} for i in range(max(0, q_wave - 1), min(len(smoothed_heartbeats), q_wave + 2))
+            ])
+            waves_list.extend([
+                {'ECG_I_filtered': smoothed_heartbeats[i], 'wave_label': 'r'} for i in range(max(0, r + r_wave - 1), min(len(smoothed_heartbeats), r + r_wave + 2))
+            ])
+            waves_list.extend([
+                {'ECG_I_filtered': smoothed_heartbeats[i], 'wave_label': 's'} for i in range(max(0, s_wave - 1), min(len(smoothed_heartbeats), s_wave + 2))
+            ])
+            waves_list.extend([
+                {'ECG_I_filtered': smoothed_heartbeats[i], 'wave_label': 't'} for i in range(max(0, t_wave - 1), min(len(smoothed_heartbeats), t_wave + 2))
+            ])
+
+    waves_df = pd.DataFrame(waves_list)
+
+    return waves_df
 
 def run(input_data_directory):
-    interim_data_directory = './data/interim/ecg-id-database-1.0.0/'
+    interim_data_directory = './data/interim/ecg-id-database-2.0.0/'
 
     for file_name in os.listdir(input_data_directory):
         print(file_name)
