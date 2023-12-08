@@ -43,31 +43,31 @@ the most suitable approach.
 
 ## Project Timeline
 
-1. Saturday: Understand the dataset -- **DONE**
+1. Understand the dataset -- **DONE**
 	* Download and thoroughly understand the ECG-ID Database.
 	* Examine the data structure, features, and labels.
 	* Identify any missing or noisy data.
-2. Sunday: Research -- **DONE**
+2. Research -- **DONE**
 	* Read relevant literature on ECG signal classification
 	* Identify potential algorithms and techniques suitable for the project.
-3. Monday: Data Processing: -- **DONE**
+3. Data Processing -- **DONE**
 	* Handle missing data, if any.
 	* Normalize and standardize features.
 	* Explore techniques for handling imbalanced classes.
-4. Tuesday: Feature Extraction
+4. Feature Extraction -- **DONE**
 	* Extract relevant features from ECG signals.
 	* Consider time-domain and frequency-domain features.
-5. Wednesday: Model Selection
+5. Model Selection -- **DONE**
 	* Choose a suitable classification algorithm.
 	* Divide the dataset into training and testing sets.
-6. Thursday: Model Training
+6. Model Training -- **DONE**
 	* Train your chosen model using the training set.
 	* Experiment with hyperparameter tuning to improve performance.
-7. Friday: Evaluation and Fine-Tuning:
+7. Evaluation and Fine-Tuning: -- **DONE**
 	* Evaluate the model on the testing set.
 	* Fine-tune the model based on performance.
 	* Consider using techniques like cross-validation.
-8. Saturday: Prepare Presentation
+8. Prepare Presentation
 	* Create slides summarizing the project:
 		* Introduction
 		* Prior works
@@ -77,7 +77,7 @@ the most suitable approach.
 		* Challenges faced
 		* Future work
 		* Conclusion
-9. Sunday: 
+9. Submission
 	* Finalize Model:
 		* Make final adjustments to the model based on any insights.
 		* Record presentation, ensuring clarity and conciseness.
