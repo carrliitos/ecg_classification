@@ -1,9 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import tensorflow as tf
-
-tf.logging.set_verbosity(tf.logging.INFO)
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
 
 def load_data(file_path):
     """
@@ -43,38 +42,24 @@ def visualize_data(x_train, y_train):
     plt.xlabel("Time (ms)", fontsize=15)
     plt.savefig("../reports/figures/one-beat-ecg-for-each-cats.png")
 
-def train_model(x_train, y_train):
+def train_model_sklearn(x_train, y_train):
     """
-    Train a DNNClassifier model.
+    Train an MLPClassifier model using scikit-learn.
 
     Parameters:
     - x_train (numpy.ndarray): Training features.
     - y_train (numpy.ndarray): Training labels.
 
     Returns:
-    - estimator (tf.estimator.Estimator): Trained DNNClassifier model.
+    - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
     """
-    feature_columns = [tf.feature_column.numeric_column('beat', shape=[187])]
+    # Create an MLPClassifier
+    mlp_classifier = MLPClassifier(hidden_layer_sizes=(256, 64, 16), max_iter=400, random_state=42)
 
-    estimator = tf.estimator.DNNClassifier(
-        feature_columns=feature_columns,
-        hidden_units=[256, 64, 16],
-        optimizer=tf.train.AdamOptimizer(1e-4),
-        n_classes=2,
-        dropout=0.1,
-        model_dir='../data/external/mitdb'
-    )
+    # Train the classifier
+    mlp_classifier.fit(x_train, y_train)
 
-    input_fn_train = tf.estimator.inputs.numpy_input_fn(
-        x={'beat': x_train},
-        y=y_train,
-        num_epochs=None,
-        batch_size=50,
-        shuffle=True
-    )
-
-    estimator.train(input_fn=input_fn_train, steps=400000)
-    return estimator
+    return mlp_classifier
 
 def evaluate_model(estimator, x_validate, y_validate):
     """
@@ -148,7 +133,7 @@ if __name__ == "__main__":
     visualize_data(x_train, y_train)
 
     # Train the model
-    trained_estimator = train_model(x_train, y_train)
+    trained_estimator = train_model_sklearn(x_train, y_train)
 
     # Evaluate the model
     evaluate_model(trained_estimator, x_validate, y_validate)
