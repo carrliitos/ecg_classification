@@ -3,7 +3,16 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import (
+    confusion_matrix, 
+    accuracy_score, 
+    precision_score, 
+    recall_score, 
+    f1_score, 
+    roc_curve, 
+    auc, 
+    precision_recall_curve
+)
 import joblib  # Used for model serialization
 
 def load_data(file_path):
@@ -63,18 +72,83 @@ def train_model_sklearn(x_train, y_train):
 
     return mlp_classifier
 
-def evaluate_model(mlp_classifier, x_validate, y_validate):
+def evaluate_model(estimator, x_validate, y_validate):
     """
     Evaluate the trained model.
 
     Parameters:
-    - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
+    - estimator (tf.estimator.Estimator): Trained DNNClassifier model.
     - x_validate (numpy.ndarray): Validation features.
     - y_validate (numpy.ndarray): Validation labels.
     """
-    y_pred = mlp_classifier.predict(x_validate)
-    accuracy = accuracy_score(y_validate, y_pred)
-    print('\nTest Accuracy: {:.2%}\n'.format(accuracy * 100))
+    input_fn_validate = tf.estimator.inputs.numpy_input_fn(
+        x={'beat': x_validate},
+        y=y_validate,
+        num_epochs=1,
+        shuffle=False
+    )
+
+    predictions = estimator.predict(input_fn=input_fn_validate)
+    predicted_labels = [prediction['class_ids'][0] for prediction in predictions]
+
+    # Confusion Matrix
+    cm = confusion_matrix(y_validate, predicted_labels)
+    print('Confusion Matrix:')
+    print(cm)
+
+    # Accuracy
+    accuracy = accuracy_score(y_validate, predicted_labels)
+    print('\nAccuracy: {:.2f}%'.format(accuracy * 100))
+
+    # Precision
+    precision = precision_score(y_validate, predicted_labels)
+    print('Precision: {:.2f}'.format(precision))
+
+    # Recall
+    recall = recall_score(y_validate, predicted_labels)
+    print('Recall: {:.2f}'.format(recall))
+
+    # Specificity
+    specificity = cm[0, 0] / (cm[0, 0] + cm[0, 1])
+    print('Specificity: {:.2f}'.format(specificity))
+
+    # F1 Score
+    f1 = f1_score(y_validate, predicted_labels)
+    print('F1 Score: {:.2f}'.format(f1))
+
+    # Precision-Recall Curve
+    precision, recall, _ = precision_recall_curve(y_validate, predicted_labels)
+    plt.figure()
+    plt.plot(recall, precision, color='darkorange', lw=2)
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall Curve')
+    plt.grid(True)
+    plt.savefig('../reports/figures/precision_recall_curve.png')
+
+    # ROC Curve
+    fpr, tpr, _ = roc_curve(y_validate, predicted_labels)
+    roc_auc = auc(fpr, tpr)
+    plt.figure()
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = {:.2f})'.format(roc_auc))
+    plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+    plt.xlabel('False Positive Rate')
+    plt.ylabel('True Positive Rate')
+    plt.title('Receiver Operating Characteristic (ROC) Curve')
+    plt.legend(loc='lower right')
+    plt.grid(True)
+    plt.savefig('../reports/figures/roc_curve.png')
+
+    # PR vs ROC Curve
+    plt.figure()
+    plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = {:.2f})'.format(roc_auc))
+    plt.plot(recall, precision, color='blue', lw=2, label='PR curve')
+    plt.xlabel('False Positive Rate / Recall')
+    plt.ylabel('True Positive Rate / Precision')
+    plt.title('PR vs ROC Curve')
+    plt.legend(loc='lower right')
+    plt.grid(True)
+    plt.savefig('../reports/figures/pr_vs_roc_curve.png')
 
 def test_model(mlp_classifier, x_test, y_test):
     """
