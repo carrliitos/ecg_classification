@@ -188,7 +188,7 @@ def export_model(mlp_classifier, save_path='../models/mitdb/ecg_serving_model.jo
     """
     joblib.dump(mlp_classifier, save_path)
 
-if __name__ == "__main__":
+def main():
     # Load the data
     x_train, y_train = load_data("../data/interim/mitdb/train.csv")
     x_validate, y_validate = load_data("../data/interim/mitdb/validate.csv")
@@ -208,3 +208,6 @@ if __name__ == "__main__":
 
     # Export the model
     export_model(trained_mlp_model)
+
+if __name__ == "__main__":
+    main()

@@ -1,14 +1,17 @@
-from src import pre_proc, wave_labeling
+from src.a01 import main as ecg_main
+from src.a02 import main as process_main
+from src.a03_prep import main as prep_main
+from src.a04_training import main as training_main
 
-def main():
-    raw_data_directory = './data/raw/ecg-id-database-1.0.0/'
-    processed_data_directory = './data/processed/ecg-id-database-1.0.0/'
+if __name__ == "__main__":
+    # Run ECG data loading and plotting
+    ecg_main()
 
-    # Pre-process raw data and get the processed data directory
-    processed_data_directory = pre_proc.preprocess_ecg_data(raw_data_directory)
+    # Run ECG data processing
+    process_main()
 
-    # Run wave labeling on the processed data
-    wave_labeling.run(processed_data_directory)
+    # Run data preparation
+    prep_main()
 
-if __name__ == '__main__':
-    main()
+    # Train the model
+    training_main()
