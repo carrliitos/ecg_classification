@@ -75,8 +75,6 @@ def train_model_sklearn(x_train, y_train):
 
     return mlp_classifier
 
-from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score, precision_recall_curve, roc_curve, auc
-
 def evaluate_model(classifier, x_validate, y_validate, directory):
     """
     Evaluate the trained model using scikit-learn metrics.
