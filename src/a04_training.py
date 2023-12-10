@@ -67,6 +67,8 @@ def train_model_sklearn(x_train, y_train):
     Returns:
     - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
     """
+    print("Training Phase")
+
     # Create an MLPClassifier
     mlp_classifier = MLPClassifier(hidden_layer_sizes=(256, 64, 16), max_iter=400, random_state=42)
 
@@ -84,6 +86,8 @@ def evaluate_model(classifier, x_validate, y_validate, directory):
     - x_validate (numpy.ndarray): Validation features.
     - y_validate (numpy.ndarray): Validation labels.
     """
+
+    print("Validation Phase")
 
     # Make predictions on the validation set
     y_pred = classifier.predict(x_validate)
@@ -136,6 +140,8 @@ def test_model(classifier, x_test, y_test, directory):
     - x_test (numpy.ndarray): Test features.
     - y_test (numpy.ndarray): Test labels.
     """
+    print("Testing Phase")
+
     # Make predictions on the test set
     y_pred = classifier.predict(x_test)
 
