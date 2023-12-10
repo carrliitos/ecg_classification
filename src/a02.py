@@ -4,9 +4,10 @@ import wfdb as wf
 import numpy as np
 from scipy import signal
 from src.datasets import mitdb as dm
+from src.utils import context as ctxt
 from biosppy.signals import ecg
 
-def load_data(path):
+def load_data(path, realbeats):
     """
     Load ECG data from WFDB files and extract relevant information.
 
@@ -116,8 +117,12 @@ def save_to_csv(beats, path, filename, chname):
         np.savetxt(fin, savedata, delimiter=",", fmt='%f')
 
 def main():
-    sys.path.append("/home/carlitos/Documents/Projects/ecg_classification")
-    records = dm.get_records("../data/raw/mitdb")
+    directory = ctxt.get_context(os.path.abspath(__file__))
+
+    raw_path = f"{directory}/data/raw/mitdb"
+    processed_path = f"{directory}/data/processed/mitdb"
+
+    records = dm.get_records(raw_path)
     print('Total files: ', len(records))
 
     realbeats = ['N', 'L', 'R', 'B', 'A', 'a', 'J', 'S', 'V', 'r',
@@ -128,7 +133,7 @@ def main():
         fn = pathpts[-1]
         print('Loading file:', path)
 
-        data, rates, record_info = load_data(path)
+        data, rates, record_info = load_data(path, realbeats)
         print('    Sampling frequency used for this record:', record_info.get('fs'))
         print('    Shape of loaded data array:', data.shape)
         print('    Number of loaded annotations:', len(rates))
@@ -140,7 +145,7 @@ def main():
             rpeaks, rpeak_indices = find_rpeaks(channel)
             beats = np.split(channel, rpeak_indices)
             processed_beats = process_beats(beats, rates, rpeak_indices)
-            save_to_csv(processed_beats, "../data/processed/mitdb", fn, chname)
+            save_to_csv(processed_beats, processed_path, fn, chname)
 
 if __name__ == "__main__":
     main()
