@@ -1,7 +1,9 @@
+import os
+from src.utils import context as ctxt
 from glob import glob
 import numpy as np
 
-def load_processed_data(directory='../data/processed/mitdb'):
+def load_processed_data(directory):
     """
     Load processed ECG data from CSV files in a specified directory.
 
@@ -43,7 +45,7 @@ def shuffle_and_separate(data):
 
     return data[:mark1], data[mark1:mark2], data[mark2:]
 
-def save_data(train_data, test_data, validate_data, directory='../data/interim/mitdb'):
+def save_data(train_data, test_data, validate_data, directory):
     """
     Save ECG data into separate CSV files for training, testing, and validation.
 
@@ -63,9 +65,14 @@ def save_data(train_data, test_data, validate_data, directory='../data/interim/m
         np.savetxt(fin, validate_data, delimiter=",", fmt='%f')
 
 def main():
-    alldata = load_processed_data()
+    directory = ctxt.get_context(os.path.abspath(__file__))
+
+    processed_data_path = f"{directory}/data/processed/mitdb"
+    interim_data_path = f"{directory}/data/interim/mitdb"
+
+    alldata = load_processed_data(processed_data_path)
     train_data, test_data, validate_data = shuffle_and_separate(alldata)
-    save_data(train_data, test_data, validate_data)
+    save_data(train_data, test_data, validate_data, interim_data_path)
 
 if __name__ == "__main__":
     main()
