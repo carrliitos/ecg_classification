@@ -1,7 +1,9 @@
 import sys
+import os
 import wfdb as wf
 import numpy as np
 from src.datasets import mitdb as dm
+from src.utils import context as ctxt
 from matplotlib import pyplot as plt
 
 def load_ecg_file(file_path, channel=0, sample_start=0, sample_size=4000):
@@ -73,15 +75,18 @@ def plot_ecg_data(times, ecg_data, annotimes, annotypes, save_path=None):
         plt.show()
 
 def main():
+    directory = ctxt.get_context(os.path.abspath(__file__))
+
     FILE=2                # There are 48 files.
     CHANNEL=0             # There are 2 channels
     SAMPLE_START=114000   # Start of the sample in the file.
     SAMPLE_SIZE=4000      # Number of readings (360 per second).
 
-    sys.path.append("/home/carlitos/Documents/Projects/ecg_classification")
+    # sys.path.append("/home/carlitos/Documents/Projects/ecg_classification")
+    raw_path = f"{directory}/data/raw/mitdb"
 
-    dbfiles = dm.get_records("../data/raw/mitdb")
-    print('Total files: ', len(dbfiles))
+    dbfiles = dm.get_records(raw_path)
+    print(f'Total files: {len(dbfiles)}')
 
     # Pick a file.
     FILE = 2
@@ -89,7 +94,7 @@ def main():
     print('Loading file:', datfile)
 
     # Specify the save path.
-    save_path = f"../reports/figures/{datfile.split('/')[-1].split('.')[0]}_ecg_plot.png"
+    save_path = f"{directory}/reports/figures/{datfile.split('/')[-1].split('.')[0]}_ecg_plot.png"
 
     times, ecg_data, annotimes, annotypes = load_ecg_file(datfile, CHANNEL, SAMPLE_START, SAMPLE_SIZE)
     plot_ecg_data(times, ecg_data, annotimes, annotypes, save_path=save_path)
