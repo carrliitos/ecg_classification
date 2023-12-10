@@ -1,6 +1,8 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from src.utils import context as ctxt
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
@@ -32,7 +34,7 @@ def load_data(file_path):
     y_data = df.values[:, -1].astype(int)
     return x_data, y_data
 
-def visualize_data(x_train, y_train):
+def visualize_data(x_train, y_train, directory):
     """
     Visualize one Normal and one Abnormal heartbeat.
 
@@ -52,7 +54,7 @@ def visualize_data(x_train, y_train):
     plt.title("1-beat ECG for every category", fontsize=20)
     plt.ylabel("Normalized Amplitude (0 - 1)", fontsize=15)
     plt.xlabel("Time (ms)", fontsize=15)
-    plt.savefig("../reports/figures/one-beat-ecg-for-each-cats.png")
+    plt.savefig(f"{directory}/reports/figures/one-beat-ecg-for-each-cats.png")
 
 def train_model_sklearn(x_train, y_train):
     """
@@ -75,7 +77,7 @@ def train_model_sklearn(x_train, y_train):
 
 from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score, precision_recall_curve, roc_curve, auc
 
-def evaluate_model(classifier, x_validate, y_validate):
+def evaluate_model(classifier, x_validate, y_validate, directory):
     """
     Evaluate the trained model using scikit-learn metrics.
 
@@ -113,7 +115,7 @@ def evaluate_model(classifier, x_validate, y_validate):
     plt.xlabel('Recall')
     plt.ylabel('Precision')
     plt.title('Precision-Recall Curve')
-    plt.savefig("../reports/figures/precision_recall_curve.png")
+    plt.savefig(f"{directory}/reports/figures/precision_recall_curve.png")
 
     # ROC Curve
     fpr, tpr, _ = roc_curve(y_validate, y_pred)
@@ -125,9 +127,9 @@ def evaluate_model(classifier, x_validate, y_validate):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic Curve')
     plt.legend(loc="lower right")
-    plt.savefig("../reports/figures/roc_curve.png")
+    plt.savefig(f"{directory}/reports/figures/roc_curve.png")
 
-def test_model(classifier, x_test, y_test):
+def test_model(classifier, x_test, y_test, directory):
     """
     Test the trained model and print additional evaluation metrics.
 
@@ -164,7 +166,7 @@ def test_model(classifier, x_test, y_test):
     plt.xlabel('Recall')
     plt.ylabel('Precision')
     plt.title('Precision-Recall Curve')
-    plt.savefig("../reports/figures/test_precision_recall_curve.png")
+    plt.savefig(f"{directory}/reports/figures/test_precision_recall_curve.png")
 
     # ROC Curve
     fpr, tpr, _ = roc_curve(y_test, y_pred)
@@ -176,9 +178,9 @@ def test_model(classifier, x_test, y_test):
     plt.ylabel('True Positive Rate')
     plt.title('Receiver Operating Characteristic Curve')
     plt.legend(loc="lower right")
-    plt.savefig("../reports/figures/test_roc_curve.png")
+    plt.savefig(f"{directory}/reports/figures/test_roc_curve.png")
 
-def export_model(mlp_classifier, save_path='../models/mitdb/ecg_serving_model.joblib'):
+def export_model(mlp_classifier, directory):
     """
     Export the trained model for serving predictions.
 
@@ -186,28 +188,34 @@ def export_model(mlp_classifier, save_path='../models/mitdb/ecg_serving_model.jo
     - mlp_classifier (MLPClassifier): Trained MLPClassifier model.
     - save_path (str): Path to save the exported model.
     """
+    save_path=f'{directory}/models/mitdb/ecg_serving_model.joblib'
     joblib.dump(mlp_classifier, save_path)
 
 def main():
+    directory = ctxt.get_context(os.path.abspath(__file__))
+    train_csv_path = f"{directory}/data/interim/mitdb/train.csv"
+    validate_csv_path = f"{directory}/data/interim/mitdb/validate.csv"
+    test_csv_path = f"{directory}/data/interim/mitdb/test.csv"
+
     # Load the data
-    x_train, y_train = load_data("../data/interim/mitdb/train.csv")
-    x_validate, y_validate = load_data("../data/interim/mitdb/validate.csv")
-    x_test, y_test = load_data("../data/interim/mitdb/test.csv")
+    x_train, y_train = load_data(train_csv_path)
+    x_validate, y_validate = load_data(validate_csv_path)
+    x_test, y_test = load_data(test_csv_path)
 
     # Visualize Data
-    visualize_data(x_train, y_train)
+    visualize_data(x_train, y_train, directory)
 
     # Train the model
     trained_mlp_model = train_model_sklearn(x_train, y_train)
 
     # Evaluate the model
-    evaluate_model(trained_mlp_model, x_validate, y_validate)
+    evaluate_model(trained_mlp_model, x_validate, y_validate, directory)
 
     # Test the model
-    test_model(trained_mlp_model, x_test, y_test)
+    test_model(trained_mlp_model, x_test, y_test, directory)
 
     # Export the model
-    export_model(trained_mlp_model)
+    export_model(trained_mlp_model, directory)
 
 if __name__ == "__main__":
     main()
