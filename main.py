@@ -4,14 +4,14 @@ from src.a03_prep import main as prep_main
 from src.a04_training import main as training_main
 
 if __name__ == "__main__":
-    # Run ECG data loading and plotting
+    print("**********Run ECG data loading and plotting**********")
     ecg_main()
 
-    # Run ECG data processing
+    print("**********Run ECG data processing**********")
     process_main()
 
-    # Run data preparation
+    print("**********Run data preparation**********")
     prep_main()
 
-    # Train the model
+    print("**********Train the model**********")
     training_main()
