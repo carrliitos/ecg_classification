@@ -93,6 +93,59 @@ This project aims to leverage machine learning techniques to classify ECG signal
 following the outlined methodology and conducting thorough experiments, we anticipate achieving a robust and accurate 
 classification model.
 
+## Project Implementation
+
++---------------------------------------------+
+|                 Start                       |
++---------------------------------------------+
+                    |
+                    v
++---------------------------------------------+
+|    Download MIT-BIH Arrhythmia Database     |
+|       from https://physionet.org/           |
++---------------------------------------------+
+                    |
+                    v
++---------------------------------------------+
+|    Convert WFDB files to CSV files          |
+|                                             |
+|  - Split at R-peaks                         |
+|  - Append readings for QRS Complex          |
+|  - Resample to 125Hz                        |
+|  - Normalize mV readings to 0-1 range       |
+|  - Discard records >187 values              |
+|  - Pad records to exactly 187 values        |
+|  - Reduce classifications to Normal/Abnormal|
+|  - Discard records without classifications  |
++---------------------------------------------+
+                    |
+                    v
++---------------------------------------------+
+|         Generate Training, Validation,      |
+|               and Test CSV files            |
+|                                             |
+|  - Read all generated CSV files             |
+|  - Shuffle records randomly                 |
+|  - Save 60% for training                    |
+|  - Save 20% for validation                  |
+|  - Save 20% for testing                     |
++---------------------------------------------+
+                    |
+                    v
++---------------------------------------------+
+|        Train, Validate, and Test Model      |
+|                                             |
+|  - Use the CSV files for training data      |
+|  - Train the ECG model                      |
+|  - Validate the model using validation data |
+|  - Test the model using test data           |
++---------------------------------------------+
+                    |
+                    v
++---------------------------------------------+
+|                 End                          |
++---------------------------------------------+
+
 ## Citations
 
 * [1][1] Darmawahyuni, Annisa, et al. "Deep learning-based electrocardiogram rhythm and beat features for heart abnormality 
