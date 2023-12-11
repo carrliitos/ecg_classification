@@ -90,10 +90,10 @@ the most suitable approach.
 	* Finalize Model:  -- **DONE**
 		* Make final adjustments to the model based on any insights.
 		* Record presentation, ensuring clarity and conciseness.
-	* Prepare Submission:
+	* Prepare Submission: -- **DONE**
 		* Finalize the project report.
 		* Ensure all files are organized and ready for submission.
-	* Submit:
+	* Submit: -- **DONE**
 		* Submit project before the 6pm deadline.
 
 ## Conclusion
