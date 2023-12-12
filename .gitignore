@@ -10,6 +10,10 @@ data/*/*
 !data/*/.*
 !data/.gitkeep
 notebooks/archive
+models/*
+!models/.gitkeep
+models/mitdb/*
+!models/mitdb/.gitkeep
 
 ################################################################################
 #                                                                              #
