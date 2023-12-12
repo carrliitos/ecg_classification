@@ -1,8 +1,8 @@
 # ECG Classification Using the MIT-BIH Arrhythmia Database
 
-Benzon Carlitos Salazar
-CS732 Final Project
-December 11, 2023
+> Benzon Carlitos Salazar
+> CS732 Final Project
+> December 11, 2023
 
 ## Introduction
 
